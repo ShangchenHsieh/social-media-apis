@@ -6,12 +6,8 @@ from starlette import status
 import psycopg2
 
 router = APIRouter(
-<<<<<<< HEAD
-    prefix="/posts"
-=======
     prefix="/posts",
     tags=['Posts']
->>>>>>> d2683bf (Sean Sep 8)
 )
 
 @router.get("/", response_model=list[schemas.Post])
