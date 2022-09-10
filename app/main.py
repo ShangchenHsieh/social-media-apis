@@ -8,8 +8,6 @@ from typing import List
 from .routers import post, user
 from .routers import post, user, auth
 
-# should be able to see this comment
-# comments from laptop
 
 models.Base.metadata.create_all(bind=engine)
 
