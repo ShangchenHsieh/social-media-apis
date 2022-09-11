@@ -1,7 +1,8 @@
 import psycopg2
 from fastapi import FastAPI, Response, HTTPException, Depends
 from psycopg2.extras import RealDictCursor
-from . import models, schemas, utils
+
+from . import models
 from .database import engine, get_db
 from sqlalchemy.orm import Session
 from typing import List
