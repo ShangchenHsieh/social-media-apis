@@ -1,4 +1,4 @@
-from .. import models, schemas, utils
+from .. import models, schemas, utils, oauth2
 from fastapi import FastAPI, Response, HTTPException, Depends, APIRouter
 from ..database import get_db
 from sqlalchemy.orm import Session
@@ -11,21 +11,22 @@ router = APIRouter(
 )
 
 @router.get("/", response_model=list[schemas.Post])
-def get_posts(db: Session = Depends(get_db)):
+def get_posts(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     # cursor.execute("""SELECT * FROM posts""")
     # posts = cursor.fetchall()
+    print(current_user)
     posts = db.query(models.Post).all()
     return posts
 
 
 # change the default status code
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.Post)
-def create_posts(post: schemas.PostCreate, db: Session = Depends(get_db)):
+def create_posts(post: schemas.PostCreate, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     # cursor.execute("""INSERT INTO posts(title, content, published) VALUES(%s, %s, %s) RETURNING *"""
                    # , (post.title, post.content, post.published))
     # new_post = cursor.fetchone()
     # conn.commit()  # save changes to the DB
-
+    print(current_user)
     new_posts = models.Post(title=post.title, content=post.content, published=post.published)
     # or replace with **post.dict() -> new_posts = models.Post(**post.dict())
 
@@ -37,9 +38,11 @@ def create_posts(post: schemas.PostCreate, db: Session = Depends(get_db)):
 
 
 @router.get("/{id}", response_model=schemas.Post)
-def get_post(id: int, db: Session = Depends(get_db)):
+def get_post(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
     # cursor.execute("""SELECT * FROM posts WHERE id = %s""", str(id))
     # post = cursor.fetchone()
+
+    print(current_user)
     post = db.query(models.Post).filter(models.Post.id == id).first()
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} was not found")

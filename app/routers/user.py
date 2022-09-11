@@ -9,14 +9,10 @@ router = APIRouter(
     prefix="/users"
 )
 
-@router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.UserOut)
-def created_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-)
-
 
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.UserOut)
 def created_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
-    # hash the pw - user.password
+
     hashed_password = utils.hash(user.password)
     user.password = hashed_password
 
