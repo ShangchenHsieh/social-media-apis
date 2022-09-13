@@ -7,6 +7,7 @@ from .database import engine, get_db
 from sqlalchemy.orm import Session
 from typing import List
 from .routers import post, user, auth
+
 #testing
 
 models.Base.metadata.create_all(bind=engine)

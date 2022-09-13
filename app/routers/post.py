@@ -1,83 +1,111 @@
-from .. import models, schemas, utils, oauth2
-from fastapi import FastAPI, Response, HTTPException, Depends, APIRouter
-from ..database import get_db
+from fastapi import FastAPI, Response, status, HTTPException, Depends, APIRouter
 from sqlalchemy.orm import Session
-from starlette import status
-import psycopg2
+from typing import List, Optional
+
+from sqlalchemy import func
+# from sqlalchemy.sql.functions import func
+from .. import models, schemas, oauth2
+from ..database import get_db
+
 
 router = APIRouter(
     prefix="/posts",
     tags=['Posts']
 )
 
-@router.get("/", response_model=list[schemas.Post])
-def get_posts(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
-    # cursor.execute("""SELECT * FROM posts""")
+
+# @router.get("/", response_model=List[schemas.Post])
+@router.get("/", response_model=List[schemas.PostOut])
+def get_posts(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user), limit: int = 10, skip: int = 0, search: Optional[str] = ""):
+    # results = db.query(models.Post, func.count(models.Vote.post_id).label("votes")).join(
+    #     models.Vote, models.Vote.post_id == models.Post.id, isouter=True).group_by(models.Post.id)
+
+    # cursor.execute("""SELECT * FROM posts """)
     # posts = cursor.fetchall()
-    print(current_user)
+
+    # posts = db.execute(
+    #     'select posts.*, COUNT(votes.post_id) as votes from posts LEFT JOIN votes ON posts.id=votes.post_id  group by posts.id')
+    # results = []
+    # for post in posts:
+    #     results.append(dict(post))
+    # print(results)
+    # posts = db.query(models.Post).filter(
+    #     models.Post.title.contains(search)).limit(limit).offset(skip).all()
+
     posts = db.query(models.Post).all()
     return posts
 
 
-# change the default status code
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.Post)
 def create_posts(post: schemas.PostCreate, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
-    # cursor.execute("""INSERT INTO posts(title, content, published) VALUES(%s, %s, %s) RETURNING *"""
-                   # , (post.title, post.content, post.published))
+    # cursor.execute("""INSERT INTO posts (title, content, published) VALUES (%s, %s, %s) RETURNING * """,
+    #                (post.title, post.content, post.published))
     # new_post = cursor.fetchone()
-    # conn.commit()  # save changes to the DB
-    print(current_user)
-    new_posts = models.Post(title=post.title, content=post.content, published=post.published)
-    # or replace with **post.dict() -> new_posts = models.Post(**post.dict())
 
-    db.add(new_posts)
+    # conn.commit()
+
+    new_post = models.Post(**post.dict())
+    db.add(new_post)
     db.commit()
-    db.refresh(new_posts) # not a dictionary yet
+    db.refresh(new_post)
 
-    return new_posts
+    return new_post
 
 
-@router.get("/{id}", response_model=schemas.Post)
+@router.get("/{id}", response_model=schemas.PostOut)
 def get_post(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
-    # cursor.execute("""SELECT * FROM posts WHERE id = %s""", str(id))
+    # cursor.execute("""SELECT * from posts WHERE id = %s """, (str(id),))
     # post = cursor.fetchone()
+    # post = db.query(models.Post).filter(models.Post.id == id).first()
 
-    print(current_user)
     post = db.query(models.Post).filter(models.Post.id == id).first()
+
     if not post:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} was not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"post with id: {id} was not found")
 
     return post
 
 
-@router.delete("/{id}")
-def delete_post(id: int, db: Session = Depends(get_db)):
-    # cursor.execute("""DELETE FROM posts WHERE id = %s RETURNING *""", str(id))
+@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_post(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+
+    # cursor.execute(
+    #     """DELETE FROM posts WHERE id = %s returning *""", (str(id),))
     # deleted_post = cursor.fetchone()
-
     # conn.commit()
+    post_query = db.query(models.Post).filter(models.Post.id == id)
 
-    deleted_post = db.query(models.Post).filter(models.Post.id == id)
-    if deleted_post.first() == None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with the {id} doesn't exist")
+    post = post_query.first()
 
-    deleted_post.delete(synchronize_session=False)
+    if post == None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"post with id: {id} does not exist")
+
+
+    post_query.delete(synchronize_session=False)
     db.commit()
 
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @router.put("/{id}", response_model=schemas.Post)
-def update_post(id: int, updated_post: schemas.PostCreate, db: Session = Depends(get_db)):
+def update_post(id: int, updated_post: schemas.PostCreate, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+
     # cursor.execute("""UPDATE posts SET title = %s, content = %s, published = %s WHERE id = %s RETURNING *""",
-                   # (post.title, post.content, post.published, str(id)))
+    #                (post.title, post.content, post.published, str(id)))
+
     # updated_post = cursor.fetchone()
     # conn.commit()
 
     post_query = db.query(models.Post).filter(models.Post.id == id)
+
     post = post_query.first()
+
     if post == None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with the {id} doesn't exist")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"post with id: {id} does not exist")
+
 
     post_query.update(updated_post.dict(), synchronize_session=False)
 
