@@ -34,8 +34,10 @@ class Post(PostBase):
 
 
 class PostOut(BaseModel):
-    Post: Post
-    votes: int
+    id: int
+    title: str
+    content: str
+    created_at: datetime
 
     class Config:
         orm_mode = True
