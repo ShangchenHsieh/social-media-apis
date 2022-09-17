@@ -32,7 +32,7 @@ def get_posts(db: Session = Depends(get_db), current_user: int = Depends(oauth2.
     # posts = db.query(models.Post).filter(
     #     models.Post.title.contains(search)).limit(limit).offset(skip).all()
 
-    posts = db.query(models.Post).all()
+    posts = db.query(models.Post).filter(models.Post.owner_id == current_user.id).all()
     return posts
 
 
@@ -44,7 +44,7 @@ def create_posts(post: schemas.PostCreate, db: Session = Depends(get_db), curren
 
     # conn.commit()
 
-    new_post = models.Post(**post.dict())
+    new_post = models.Post(owner_id=current_user.id, **post.dict())
     db.add(new_post)
     db.commit()
     db.refresh(new_post)
@@ -82,6 +82,9 @@ def delete_post(id: int, db: Session = Depends(get_db), current_user: int = Depe
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"post with id: {id} does not exist")
 
+    if post.owner_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
+                            detail=f"Not authorized to perform the requested action")
 
     post_query.delete(synchronize_session=False)
     db.commit()
