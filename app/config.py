@@ -9,15 +9,10 @@ class Settings(BaseSettings):
     database_username: str
     secret_key: str
     algorithm: str
-    access_token: str
     access_token_expire_minute: int
 
     class Config:
-        evn_file = ".env"
-
-
-
-
+        env_file = ".env"
 
 
 settings = Settings()
