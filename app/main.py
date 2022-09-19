@@ -7,12 +7,9 @@ from .database import engine, get_db
 from sqlalchemy.orm import Session
 from typing import List
 from .routers import post, user, auth
+from .config import settings
 
 
-class Settings(BaseSettings):
-    database_password: str = "localhost"
-    database_username: str = "postgres"
-    secret_key: str = ""
 
 
 models.Base.metadata.create_all(bind=engine)
