@@ -31,7 +31,6 @@ def get_posts(db: Session = Depends(get_db), current_user: int = Depends(oauth2.
     # print(results)
     # posts = db.query(models.Post).filter(
 
-
     posts = db.query(models.Post).filter(models.Post.title.contains(search)).limit(limit).offset(skip).all()
     return posts
 

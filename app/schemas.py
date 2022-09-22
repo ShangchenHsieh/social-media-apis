@@ -32,6 +32,7 @@ class UserLogin(BaseModel):
     email: EmailStr
     password: str
 
+
 class UserOut(BaseModel):
     id: int
     email: EmailStr
@@ -50,7 +51,6 @@ class Post(PostBase):
 
     class Config:
         orm_mode = True
-
 
 
 class Token(BaseModel):
