@@ -13,7 +13,7 @@ class PostBase(BaseModel):
 
 class PostCreate(PostBase):
     pass
-class PostOut(BaseModel):
+class PostOut(PostBase):
     id: int
     title: str
     content: str
