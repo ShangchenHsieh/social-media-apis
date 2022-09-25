@@ -11,28 +11,6 @@ class PostBase(BaseModel):
     published: bool = True
 
 
-class PostCreate(PostBase):
-    pass
-class PostOut(PostBase):
-    id: int
-    title: str
-    content: str
-    created_at: datetime
-
-    class Config:
-        orm_mode = True
-
-
-class UserCreate(BaseModel):
-    email: EmailStr
-    password: str
-
-
-class UserLogin(BaseModel):
-    email: EmailStr
-    password: str
-
-
 class UserOut(BaseModel):
     id: int
     email: EmailStr
@@ -51,6 +29,28 @@ class Post(PostBase):
 
     class Config:
         orm_mode = True
+
+
+class PostCreate(PostBase):
+    pass
+
+
+class PostOut(PostBase):
+    post: Post
+    votes: int
+
+    class Config:
+        orm_mode = True
+
+
+class UserCreate(BaseModel):
+    email: EmailStr
+    password: str
+
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
 
 
 class Token(BaseModel):
