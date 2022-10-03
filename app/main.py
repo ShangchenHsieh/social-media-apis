@@ -1,13 +1,10 @@
-import psycopg2
-from fastapi import FastAPI, Response, HTTPException, Depends
-from psycopg2.extras import RealDictCursor
-from pydantic import BaseSettings
-from starlette.middleware.cors import CORSMiddleware
+
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from . import models
-from .database import engine, get_db
-from sqlalchemy.orm import Session
-from typing import List
+from .database import engine
 from .routers import post, user, auth, vote
 from .config import settings
 

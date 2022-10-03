@@ -1,4 +1,4 @@
-from psycopg2.extras import RealDictCursor
+
 from sqlalchemy import create_engine
 from sqlalchemy.dialects.postgresql import psycopg2
 from sqlalchemy.ext.declarative import declarative_base
