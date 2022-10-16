@@ -1,5 +1,3 @@
-
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -7,6 +5,7 @@ from . import models
 from .database import engine
 from .routers import post, user, auth, vote
 from .config import settings
+
 
 # models.Base.metadata.create_all(bind=engine)
 
@@ -16,7 +15,7 @@ origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -30,4 +29,4 @@ app.include_router(vote.router)
 
 @app.get("/")
 def root():
-    return {"Message": "Welcome to my page"}
+    return {"message": "Hello World pushing out to Heroku"}

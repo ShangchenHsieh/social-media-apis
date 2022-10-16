@@ -11,6 +11,10 @@ class PostBase(BaseModel):
     published: bool = True
 
 
+class PostCreate(PostBase):
+    pass
+
+
 class UserOut(BaseModel):
     id: int
     email: EmailStr
@@ -26,17 +30,12 @@ class Post(PostBase):
     owner_id: int
     owner: UserOut
 
-
     class Config:
         orm_mode = True
 
 
-class PostCreate(PostBase):
-    pass
-
-
-class PostOut(PostBase):
-    post: Post
+class PostOut(BaseModel):
+    Post: Post
     votes: int
 
     class Config:
