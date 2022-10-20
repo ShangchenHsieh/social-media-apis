@@ -1,8 +1,8 @@
 # Python API's with FastAPI, OAuth2, SQLAlchemy, Postgresql - Social Media Web Application
-author: Shangchen Hsieh
+author:\ Shangchen Hsieh
 instructor: Sanjeev Thiyagarajan
 
-project description: 
+project description:
 This project is the backend API's that enables the CRUD function of a social media web application.
 The main packages that were used in this projects are FastAPI, Uvicorn, OAuth2, and SQLAlchemy.
 The database that was used is Postgresql.
