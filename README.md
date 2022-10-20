@@ -23,7 +23,7 @@ Currently nothing makes this project stand out. However, more features and front
 how to install:<br/>
 linux user -> <br/>
 $ python3 -m venv venv <br/>
-$ . /venv/bin/activate <br/>
+$ source ./venv/bin/activate <br/>
 $ pip install -r requirements.txt <br/>
 
 how to run/use: <br/>
