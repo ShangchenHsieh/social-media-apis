@@ -1,5 +1,6 @@
 # Python API's with FastAPI, OAuth2, SQLAlchemy, Postgresql - Social Media Web Application
-author:\ Shangchen Hsieh
+author:<br/>
+Shangchen Hsieh
 instructor: Sanjeev Thiyagarajan
 
 project description:
