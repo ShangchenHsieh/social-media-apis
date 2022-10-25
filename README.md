@@ -16,7 +16,7 @@ what I learned: <br/>
 tools wise -> Postman, pgAdmin4, and Heroku <br/>
 packages wise -> FastAPI, Oauth2, SQLAlchemy, and Uvicorn <br/>
 version control wise -> Git, GitHub, and Alembic <br/>
-production wise -> Heroku and Dockerfile
+production wise -> Heroku and Dockerfile <br/>
 
 what makes this project stand out:<br/>
 Currently nothing makes this project stand out. However, more features and frontend implementations will be added to this project.
@@ -30,4 +30,7 @@ $ pip install -r requirements.txt <br/>
 how to run/use: <br/>
 After the installation required packages, run "uvicorn app.main:app --reload" in the project's directory. <br/>
 
-credits: youtube tutorial link & project git repository
+credits: <br/>
+tutorial -> https://youtu.be/0sOvCWFmrtA <br/>
+github -> https://github.com/Sanjeev-Thiyagarajan/fastapi-course <br/>
+
